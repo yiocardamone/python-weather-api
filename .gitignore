@@ -3,3 +3,6 @@ venv/
 
 # Exclude IDE project folder
 .idea/
+
+# Private api_key
+config.py

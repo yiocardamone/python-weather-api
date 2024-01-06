@@ -1,27 +1,28 @@
+from abc import ABC
 import requests
 
+import config
+from model.geo_temperature import GeoTemperature
 from weather_requester import IWeatherRequester
 
 
-class SimplifiedInheritance(
-    IWeatherRequester):  # инстансы этих прослоек хранятся в сервере, это к вопросу о связи сервера и прослойки
-    # сама прослойка просто посылает реквесты
+class SimplifiedInheritance(IWeatherRequester, ABC):  # instance этих прослоек хранятся в сервере, это к вопросу о
+    # связи сервера и прослойки
+    # сама прослойка просто посылает request
 
-    API_KEY = "f5b39ac7a82e4dbd8a5120339231312"  # Paste Your API ID Here
-    FINAL_URL = "http://api.weatherapi.com/v1/current.json?key=" + API_KEY + "&q={}&aqi={}"
+    __FINAL_URL = f"http://api.weatherapi.com/v1/current.json?key={config.api_key}&q={{}}&aqi={{}}"
 
     def __init__(self, city):
         self.city = city
 
     def request_conversion(self):
-        result = requests.get(self.FINAL_URL.format(self.city, self.API_KEY))
+        result = requests.get(self.__FINAL_URL.format(self.city, config.api_key))
         data = result.json()
 
         temperature = data['current']['temp_c']
         coordinate_lon = data['location']['lon']
         coordinate_lat = data['location']['lat']
-
-        return str(temperature) + " " + str(coordinate_lat) + " " + str(coordinate_lon)
+        return GeoTemperature(temperature, coordinate_lon, coordinate_lat)
 
     def response_conversion(self):
         pass

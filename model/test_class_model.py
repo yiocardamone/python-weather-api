@@ -13,8 +13,7 @@ class TestClassModel(IWeatherRequester, ABC):
         self.city = city
 
     def response_conversion(self):
-        tom = GeoTemperature(self.temperature, self.lat, self.lon)
-        return tom
+        return GeoTemperature(self.temperature, self.lat, self.lon)
 
     def request_conversion(self):
         pass
